@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KPRIET-AWS Student Builder Group | Inauguration</title>
+  <!-- Google Fonts: Space Mono & JetBrains Mono for authentic monospace aesthetic -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --bg-dark: #121820;
+      --bg-grid-line: rgba(255, 255, 255, 0.08);
+      --aws-orange: #FF9900;
+      --aws-cyan: #38bdf8;
+      --aws-magenta: #f43f5e;
+      --aws-pink: #ec4899;
+      --aws-magenta-pixel: #ff47d3;
+      --aws-cyan-pixel: #38bdf8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'JetBrains Mono', 'Space Mono', monospace;
+    }
+
+    body {
+      background-color: #111720;
+      color: #ffffff;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Precision Grid Background */
+    .grid-bg-overlay {
+      position: absolute;
+      inset: 0;
+      background-size: 80px 80px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Ambient animated beam across the grid lines */
+    .grid-glow-scanner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle 600px at var(--mouse-x, 30%) var(--mouse-y, 30%), rgba(255, 153, 0, 0.04), transparent 70%);
+      pointer-events: none;
+      z-index: 2;
+      transition: background 0.15s ease-out;
+    }
+
+    /* Dashed Border Boxes exact to reference */
+    .ref-dashed-box {
+      border: 1.5px dashed rgba(255, 255, 255, 0.85);
+      background: rgba(18, 24, 32, 0.55);
+      backdrop-filter: blur(4px);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .ref-dashed-box:hover {
+      border-color: #FF9900;
+      box-shadow: 0 0 25px rgba(255, 153, 0, 0.15), inset 0 0 15px rgba(255, 153, 0, 0.05);
+    }
+
+    /* Pixel block styling with interactive hover micro-actions */
+    .pixel-cell {
+      transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .pixel-cell:hover {
+      transform: scale(1.04);
+      z-index: 10;
+      filter: brightness(1.18);
+    }
+
+    .pixel-orange {
+      background-color: #FF9900;
+      box-shadow: 0 0 10px rgba(255, 153, 0, 0.2);
+    }
+    .pixel-orange:hover {
+      box-shadow: 0 0 25px rgba(255, 153, 0, 0.6);
+    }
+
+    .pixel-cyan {
+      background-color: #38bdf8;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+    }
+    .pixel-cyan:hover {
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.7);
+    }
+
+    .pixel-magenta {
+      background-color: #ff33c2;
+      box-shadow: 0 0 10px rgba(255, 51, 194, 0.25);
+    }
+    .pixel-magenta:hover {
+      box-shadow: 0 0 25px rgba(255, 51, 194, 0.7);
+    }
+
+    .pixel-dark {
+      background-color: #121820;
+    }
+
+    /* Inaugurate Button */
+    .btn-inaugurate {
+      background: #FF9900;
+      color: #0d1218;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      position: relative;
+      overflow: hidden;
+      border: 2px solid #FF9900;
+      box-shadow: 0 4px 20px rgba(255, 153, 0, 0.35);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-inaugurate:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(255, 153, 0, 0.55), 0 0 15px rgba(255, 255, 255, 0.3);
+      background: #ffaa1d;
+    }
+
+    .btn-inaugurate:active {
+      transform: translateY(1px) scale(0.98);
+      box-shadow: 0 2px 10px rgba(255, 153, 0, 0.4);
+    }
+
+    .btn-inaugurate::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -60%;
+      width: 40%;
+      height: 200%;
+      background: linear-gradient(
+        60deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.4) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      transform: rotate(25deg);
+      animation: btnShimmer 4s infinite;
+    }
+
+    @keyframes btnShimmer {
+      0% { left: -60%; }
+      30% { left: 140%; }
+      100% { left: 140%; }
+    }
+
+    /* Confetti Canvas */
+    #confetti-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    /* Celebration Modal */
+    .celebrate-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 12, 18, 0.88);
+      backdrop-filter: blur(12px);
+      z-index: 90;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .celebrate-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      transform: scale(0.92) translateY(20px);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 2px dashed #FF9900;
+      background: #111720;
+      box-shadow: 0 0 50px rgba(255, 153, 0, 0.25), 0 20px 40px rgba(0, 0, 0, 0.7);
+    }
+
+    .celebrate-overlay.active .modal-card {
+      transform: scale(1) translateY(0);
+    }
+
+    /* Subtle pulsing effect for chip */
+    @keyframes chipPulse {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(255,153,0,0.4)); }
+      50% { transform: scale(1.08); filter: drop-shadow(0 0 8px rgba(255,153,0,0.8)); }
+    }
+    .chip-icon {
+      animation: chipPulse 3s ease-in-out infinite;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .grid-glow-scanner, .btn-inaugurate::after, .chip-icon {
+        animation: none;
+      }
+      .pixel-cell, .ref-dashed-box, .btn-inaugurate {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen selection:bg-[#FF9900] selection:text-black">
+  <!-- Interactive Canvas for celebratory confetti particles -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Interactive Grid Background -->
+  <div class="grid-bg-overlay"></div>
+  <div class="grid-glow-scanner" id="glowScanner"></div>
+
+  <!-- Main Content Layout (Exact 16:9 widescreen architectural rhythm) -->
+  <div class="relative z-10 flex flex-col flex-1 w-full min-h-screen justify-between">
+    
+    <!-- Top Bar with AWS Logo block strictly matching the reference -->
+    <header class="w-full flex items-start">
+      <!-- Reference top-left orange box with AWS smile wordmark -->
+      <!-- Reference top-left orange box with AWS smile wordmark -->
+      <div class="w-24 h-20 sm:w-28 sm:h-24 md:w-32 md:h-24 bg-[#FF9900] flex items-center justify-center p-2.5 sm:p-3 shadow-lg shadow-orange-500/10 cursor-pointer hover:brightness-105 transition-all">
+        <!-- AWS official logo image -->
+        <img src="aws-logo.png" alt="AWS Logo" class="w-full h-full object-contain" />
+      </div>
+
+      <!-- Live Event Indicator Tag in header -->
+      <div class="ml-6 mt-4 md:mt-6 flex items-center gap-2.5 px-3 py-1 bg-white/5 border border-white/10 rounded text-xs font-medium tracking-wider text-slate-300">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>ACADEMIC BUILDER EVENT</span>
+      </div>
+    </header>
+
+    <!-- Center Section: Left Dashed Typography Containers vs Right Geometric Pixel Art -->
+    <main class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 px-6 sm:px-12 md:px-16 lg:px-20 py-8 lg:py-6 items-center">
+      
+      <!-- LEFT COLUMN: Heading & Subtitle Containers inside White Dashed Boxes (Reference accurate) -->
+      <div class="lg:col-span-7 flex flex-col gap-6 max-w-2xl">
+        
+        <!-- Main Title Dashed Container -->
+        <div class="ref-dashed-box p-6 sm:p-8 rounded-none">
+          <p class="text-xs uppercase tracking-widest text-[#FF9900] font-semibold mb-2 flex items-center gap-2">
+            <span class="inline-block w-3 h-0.5 bg-[#FF9900]"></span> CHAPTER LAUNCH
+          </p>
+          <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-[44px] xl:text-5xl font-bold tracking-tight text-white leading-tight font-mono">
+            KPRIET-AWS<br/>
+            Student Builder Group
+          </h1>
+        </div>
+
+        <!-- Subtitle Dashed Container -->
+        <div class="ref-dashed-box px-6 py-4 rounded-none flex items-center justify-between">
+          <h2 class="text-lg sm:text-xl md:text-2xl font-normal text-slate-100 tracking-wide font-mono">
+            Official Inauguration Ceremony
+          </h2>
+          <span class="hidden sm:inline-block text-[#38bdf8] text-sm">#BuildOn</span>
+        </div>
+
+        <!-- Inaugurate CTA & Quick Action -->
+        <div class="flex flex-wrap items-center gap-4 pt-2">
+          <button id="inaugurateBtn" class="btn-inaugurate px-8 py-4 text-base sm:text-lg font-bold uppercase tracking-wider rounded-none flex items-center gap-3 cursor-pointer group">
+            <span class="text-xl">🚀</span>
+            <span>Inaugurate!</span>
+            <svg class="w-5 h-5 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+            </svg>
+          </button>
+
+          <div class="text-xs text-slate-400 font-mono tracking-wide py-2 px-3 border border-white/10 bg-black/20">
+            PRESS TO LAUNCH THE PORTAL
+          </div>
+        </div>
+
+        <!-- Live Status ticker -->
+        <div class="flex items-center gap-4 text-xs font-mono text-slate-400 pt-2">
+          <div class="flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 bg-[#FF9900] rounded-full"></span>
+            <span>KPR Institute of Engineering & Technology</span>
+          </div>
+          <span class="text-slate-600">|</span>
+          <div class="flex items-center gap-1.5 text-cyan-400">
+            <span>Cloud & Innovation Ecosystem</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: Geometric Pixel Artwork Matrix (Recreated 1:1 to Reference Grid) -->
+      <!-- 
+        The pixel matrix layout from the screenshot is a 6x6 grid composed of:
+        - Outer border frame with corner accents
+        - Top row: [cyan, magenta, empty, empty, magenta, cyan]
+        - Row 2: [magenta, ORANGE, ORANGE, ORANGE, ORANGE, magenta]
+        - Row 3: [empty, ORANGE, cyan, empty, ORANGE, empty]
+        - Row 4: [empty, ORANGE, cyan, empty, ORANGE, empty] (center plus / diamond motif)
+        - Row 5: [magenta, ORANGE, ORANGE, ORANGE, ORANGE, magenta]
+        - Row 6: [cyan, magenta, empty, empty, magenta, cyan]
+        With a centered 3x3 core:
+          cyan, dark, cyan
+          dark, cyan, dark
+          cyan, dark, cyan
+      -->
+      <div class="lg:col-span-5 flex justify-center lg:justify-end">
+        <div class="relative p-2 bg-[#121820]/80 border border-white/10 rounded-sm shadow-2xl backdrop-blur-sm">
+          
+          <!-- Decorative Corner Accents -->
+          <div class="absolute -top-1.5 -left-1.5 w-3 h-3 border-t-2 border-l-2 border-[#FF9900]"></div>
+          <div class="absolute -top-1.5 -right-1.5 w-3 h-3 border-t-2 border-r-2 border-[#FF9900]"></div>
+          <div class="absolute -bottom-1.5 -left-1.5 w-3 h-3 border-b-2 border-l-2 border-[#FF9900]"></div>
+          <div class="absolute -bottom-1.5 -right-1.5 w-3 h-3 border-b-2 border-r-2 border-[#FF9900]"></div>
+
+          <!-- 6x6 Exact Pixel Grid -->
+          <div class="grid grid-cols-6 gap-1.5 sm:gap-2 w-[280px] h-[280px] sm:w-[360px] sm:h-[360px] md:w-[420px] md:h-[420px]">
+            
+            <!-- ROW 1 -->
+            <div class="pixel-cell pixel-cyan" title="AWS Cyan"></div>
+            <div class="pixel-cell pixel-magenta" title="AWS Magenta"></div>
+            <div class="pixel-cell pixel-dark"></div>
+            <div class="pixel-cell pixel-dark"></div>
+            <div class="pixel-cell pixel-magenta" title="AWS Magenta"></div>
+            <div class="pixel-cell pixel-cyan" title="AWS Cyan"></div>
+
+            <!-- ROW 2 -->
+            <div class="pixel-cell pixel-magenta" title="AWS Magenta"></div>
+            <div class="pixel-cell pixel-orange" title="AWS Orange"></div>
+            <div class="pixel-cell pixel-orange" title="AWS Orange"></div>
+            <div class="pixel-cell pixel-orange" title="AWS Orange"></div>
+            <div class="pixel-cell pixel-orange" title="AWS Orange"></div>
+            <div class="pixel-cell pixel-magenta" title="AWS Magenta"></div>
+
+            <!-- ROW 3 -->
+            <div class="pixel-cell pixel-dark"></div>
+            <div class="pixel-cell pixel-orange" title="AWS Orange"></div>
+            <div class="pixel-cell pixel-dark"></div>
+            <div class="pixel-cell pixel-cyan" title="AWS Cyan"></div>
+            <div class="pixel-cell pixel-dark"></div>
+            <div class="pixel-cell pixel-orange" title="AWS Orange"></div>
+
+            <!-- ROW 4 -->
+            <div class="pixel-cell pixel-dark"></div>
+            <div class="pixel-cell pixel-orange" title="AWS Orange"></div>
+            <div class="pixel-cell pixel-cyan" title="AWS Cyan"></div>
+            <div class="pixel-cell pixel-dark"></div>
+            <div class="pixel-cell pixel-cyan" title="AWS Cyan"></div>
+            <div class="pixel-cell pixel-orange" title="AWS Orange"></div>
+
+            <!-- ROW 5 -->
+            <div class="pixel-cell pixel-magenta" title="AWS Magenta"></div>
+            <div class="pixel-cell pixel-orange" title="AWS Orange"></div>
+            <div class="pixel-cell pixel-orange" title="AWS Orange"></div>
+            <div class="pixel-cell pixel-orange" title="AWS Orange"></div>
+            <div class="pixel-cell pixel-orange" title="AWS Orange"></div>
+            <div class="pixel-cell pixel-magenta" title="AWS Magenta"></div>
+
+            <!-- ROW 6 -->
+            <div class="pixel-cell pixel-cyan" title="AWS Cyan"></div>
+            <div class="pixel-cell pixel-magenta" title="AWS Magenta"></div>
+            <div class="pixel-cell pixel-dark"></div>
+            <div class="pixel-cell pixel-dark"></div>
+            <div class="pixel-cell pixel-magenta" title="AWS Magenta"></div>
+            <div class="pixel-cell pixel-cyan" title="AWS Cyan"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- FOOTER: Exact structure as reference with orange chip icon and date -->
+    <footer class="w-full flex flex-col md:flex-row items-stretch md:items-end justify-between border-t border-white/10 mt-8 bg-[#0e131a]">
+      
+      <!-- Left side: Date inside Dashed container -->
+      <div class="p-4 sm:p-6 flex items-center">
+        <div class="ref-dashed-box px-4 py-2 text-xs sm:text-sm font-mono tracking-widest text-slate-200">
+          <span id="currentDate">03/26/26</span>
+        </div>
+      </div>
+
+      <!-- Right side: Orange Chip Block + AWS Student Builder Group branding (matching reference exactly) -->
+      <div class="flex items-stretch">
+        <!-- Integrated Microchip Square Icon in AWS Orange -->
+        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-[#FF9900] flex items-center justify-center p-3 sm:p-4">
+          <!-- Geometric Processor Chip Icon matching reference -->
+          <svg class="w-full h-full text-black chip-icon" viewBox="0 0 24 24" fill="currentColor">
+            <!-- Central processor core -->
+            <rect x="5" y="5" width="14" height="14" rx="1.5" stroke="#000000" stroke-width="1.5" fill="#FF9900"/>
+            <rect x="8" y="8" width="8" height="8" fill="#000000"/>
+            <!-- Top pins -->
+            <rect x="7" y="1" width="2" height="3" fill="#000000"/>
+            <rect x="11" y="1" width="2" height="3" fill="#000000"/>
+            <rect x="15" y="1" width="2" height="3" fill="#000000"/>
+            <!-- Bottom pins -->
+            <rect x="7" y="20" width="2" height="3" fill="#000000"/>
+            <rect x="11" y="20" width="2" height="3" fill="#000000"/>
+            <rect x="15" y="20" width="2" height="3" fill="#000000"/>
+            <!-- Left pins -->
+            <rect x="1" y="7" width="3" height="2" fill="#000000"/>
+            <rect x="1" y="11" width="3" height="2" fill="#000000"/>
+            <rect x="1" y="15" width="3" height="2" fill="#000000"/>
+            <!-- Right pins -->
+            <rect x="20" y="7" width="3" height="2" fill="#000000"/>
+            <rect x="20" y="11" width="3" height="2" fill="#000000"/>
+            <rect x="20" y="15" width="3" height="2" fill="#000000"/>
+          </svg>
+        </div>
+
+        <!-- Student Builder Group Banner -->
+        <div class="bg-[#121820] border-l border-white/10 px-6 sm:px-10 flex items-center justify-center">
+          <span class="text-xs sm:text-sm md:text-base font-mono font-medium tracking-wider text-slate-100 uppercase">
+            AWS Student Builder Group
+          </span>
+        </div>
+
+        <!-- White accent block from reference image -->
+        <div class="w-16 sm:w-24 bg-white flex items-center justify-center">
+          <div class="w-3 h-3 bg-[#FF9900] rotate-45"></div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- INAUGURATION CELEBRATION MODAL OVERLAY -->
+  <div id="celebrateOverlay" class="celebrate-overlay p-4">
+    <div class="modal-card max-w-xl w-full p-8 sm:p-10 text-center relative rounded-none">
+      
+      <!-- Top Decorative Accent -->
+      <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-[#FF9900] text-black font-bold text-xs font-mono uppercase tracking-widest shadow">
+        OFFICIAL LAUNCH PROTOCOL EXECUTED
+      </div>
+
+      <!-- Close Button -->
+      <button id="closeModalBtn" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2 text-xl font-mono" title="Close Overlay">
+        ✕
+      </button>
+
+      <!-- Badge Icon -->
+      <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-tr from-[#FF9900] to-[#ffaa1d] flex items-center justify-center rounded-sm shadow-lg shadow-orange-500/30">
+        <span class="text-4xl">🎉</span>
+      </div>
+
+      <!-- Main Announcement text requested -->
+      <h3 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight font-mono mb-3">
+        🎉 Congratulations!
+      </h3>
+      <p class="text-xl sm:text-2xl font-bold text-[#FF9900] font-mono mb-4">
+        KPRIET-AWS Student Builder Group is Inaugurated!
+      </p>
+
+      <!-- Supporting Message requested -->
+      <div class="border-t border-b border-white/15 py-4 my-6">
+        <blockquote class="text-sm sm:text-base text-slate-300 italic font-mono leading-relaxed">
+          “A new journey of innovation, cloud computing, and building the future begins today!”
+        </blockquote>
+      </div>
+
+      <!-- Key chapter highlights -->
+      <div class="grid grid-cols-3 gap-2 text-left mb-8 text-xs font-mono">
+        <div class="p-3 bg-white/5 border border-white/10">
+          <span class="text-[#FF9900] block font-bold mb-1">01 / LEARN</span>
+          <span class="text-slate-400">AWS Cloud Certifications & Workshops</span>
+        </div>
+        <div class="p-3 bg-white/5 border border-white/10">
+          <span class="text-[#38bdf8] block font-bold mb-1">02 / BUILD</span>
+          <span class="text-slate-400">Hands-on Cloud Architecture Hackathons</span>
+        </div>
+        <div class="p-3 bg-white/5 border border-white/10">
+          <span class="text-[#ff33c2] block font-bold mb-1">03 / CONNECT</span>
+          <span class="text-slate-400">Direct AWS Mentorship & Community</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <button id="retriggerBtn" class="w-full sm:w-auto px-6 py-3.5 bg-[#FF9900] text-black font-bold uppercase tracking-wider text-sm hover:bg-[#ffaa1d] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-orange-500/20">
+          <span>✨ Celebrate Again</span>
+        </button>
+        <button id="dismissBtn" class="w-full sm:w-auto px-6 py-3.5 bg-transparent border border-white/30 text-white font-medium uppercase tracking-wider text-sm hover:bg-white/10 hover:border-white transition-all cursor-pointer">
+          <span>Continue to Portal</span>
+        </button>
+      </div>
+
+      <p class="text-[11px] text-slate-500 font-mono mt-6">
+        KPR Institute of Engineering and Technology • 
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // --- Interactive Mouse Glow Scanner ---
+    const glowScanner = document.getElementById('glowScanner');
+    window.addEventListener('mousemove', (e) => {
+      const x = (e.clientX / window.innerWidth) * 100;
+      const y = (e.clientY / window.innerHeight) * 100;
+      glowScanner.style.setProperty('--mouse-x', `${x}%`);
+      glowScanner.style.setProperty('--mouse-y', `${y}%`);
+    });
+
+    // --- Dynamic Date fallback matching format ---
+    const dateElement = document.getElementById('currentDate');
+    const today = new Date();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    const yy = String(today.getFullYear()).slice(-2);
+    // Keep reference date structure or dynamic today:
+    dateElement.textContent = `${mm}/${dd}/${yy}`;
+
+    // --- High-Performance Pixel Confetti System ---
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let animationId = null;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    const confettiColors = ['#FF9900', '#38bdf8', '#ff33c2', '#ffffff', '#ffaa1d', '#00d2ff'];
+
+    class ConfettiPixel {
+      constructor(x, y) {
+        this.x = x ?? Math.random() * canvas.width;
+        this.y = y ?? -20;
+        this.size = Math.random() * 8 + 6; // Square pixel size
+        this.color = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+        this.speedX = (Math.random() - 0.5) * 8;
+        this.speedY = Math.random() * 6 + 4;
+        this.rotation = Math.random() * 360;
+        this.rotSpeed = (Math.random() - 0.5) * 10;
+        this.opacity = 1;
+        this.decay = Math.random() * 0.005 + 0.003;
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.rotation += this.rotSpeed;
+        this.opacity -= this.decay;
+      }
+
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate((this.rotation * Math.PI) / 180);
+        ctx.fillStyle = this.color;
+        ctx.globalAlpha = Math.max(0, this.opacity);
+        // Draw sharp pixel/rectangle
+        ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size * 0.8);
+        ctx.restore();
+      }
+    }
+
+    function launchConfetti(count = 140) {
+      for (let i = 0; i < count; i++) {
+        // Spawn from center-bottom and across screen
+        const startX = window.innerWidth * (0.2 + Math.random() * 0.6);
+        const p = new ConfettiPixel(startX, window.innerHeight * 0.5);
+        p.speedY = (Math.random() - 0.75) * 14;
+        p.speedX = (Math.random() - 0.5) * 14;
+        particles.push(p);
+      }
+      if (!animationId) {
+        renderConfetti();
+      }
+    }
+
+    function renderConfetti() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.update();
+        p.draw();
+        if (p.opacity <= 0 || p.y > canvas.height + 50) {
+          particles.splice(i, 1);
+        }
+      }
+
+      if (particles.length > 0) {
+        animationId = requestAnimationFrame(renderConfetti);
+      } else {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+      }
+    }
+
+    // --- Modal Controls ---
+    const inaugurateBtn = document.getElementById('inaugurateBtn');
+    const celebrateOverlay = document.getElementById('celebrateOverlay');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const dismissBtn = document.getElementById('dismissBtn');
+    const retriggerBtn = document.getElementById('retriggerBtn');
+
+    function openCelebration() {
+      celebrateOverlay.classList.add('active');
+      launchConfetti(160);
+    }
+
+    function closeCelebration() {
+      celebrateOverlay.classList.remove('active');
+    }
+
+    inaugurateBtn.addEventListener('click', openCelebration);
+    closeModalBtn.addEventListener('click', closeCelebration);
+    dismissBtn.addEventListener('click', closeCelebration);
+    retriggerBtn.addEventListener('click', () => {
+      launchConfetti(180);
+    });
+
+    // Close on overlay backdrop click
+    celebrateOverlay.addEventListener('click', (e) => {
+      if (e.target === celebrateOverlay) {
+        closeCelebration();
+      }
+    });
+
+    // Keyboard accessibility
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && celebrateOverlay.classList.contains('active')) {
+        closeCelebration();
+      }
+    });
+
+    // Audio synthesizer effect for tactile click feedback
+    function playChime() {
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+        osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.3); // A5
+        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.4);
+      } catch (err) {
+        // AudioContext disabled or unsupported silently ignored
+      }
+    }
+
+    inaugurateBtn.addEventListener('click', playChime);
+    retriggerBtn.addEventListener('click', playChime);
+  </script>
+</body>
+</html>
